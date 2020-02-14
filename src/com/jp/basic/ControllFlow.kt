@@ -4,6 +4,7 @@ fun main() {
     ifTest()
     whenTest()
     forTest()
+    returnTest()
 }
 
 fun ifTest() {
@@ -72,4 +73,18 @@ fun forTest() {
     }
 
     println("${(1..10)::class.simpleName}")
+}
+
+fun returnTest() {
+    println("----- return Test -----")
+
+    outer@ for (i: Int in 0..10) {
+        println("i : $i")
+        for (j: Int in 0..5) {
+            if (j == 2) {
+                return@outer;
+            }
+            println("j : $j")
+        }
+    }
 }
