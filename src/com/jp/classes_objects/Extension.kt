@@ -3,9 +3,6 @@ package com.jp.classes_objects
 fun Extension.getName(): String {
     return "NOT NAME"
 }
-fun Extension.getName(newName: String): String {
-    return "new name $newName"
-}
 
 fun main() {
     val str = "name"
@@ -14,7 +11,7 @@ fun main() {
     println()
     val extension = Extension()
     println("${extension.getName()}")
-    println("${extension.getName("newnew")}")
+//    println("${extension.getName("newnew")}")
 
     val ml = mutableListOf<Int>(1, 2, 3)
 }
@@ -38,5 +35,11 @@ class Extension {
 
     fun getName(): String {
         return "extension"
+    }
+}
+
+class Extension3 {
+    fun Extension.getName(newName: String) : String {
+        return "Extension3"
     }
 }
