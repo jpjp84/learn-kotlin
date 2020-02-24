@@ -4,13 +4,25 @@ fun main() {
 
 }
 
-interface Source<out T> {
+fun copy(from: Array<out Any>, to: Array<Any>) {
+    assert(from.size == to.size)
+    for (i in from.indices)
+        to[i] = from[i]
+}
+
+fun genericTest() {
+    val ints: Array<Int> = arrayOf(1, 2, 3)
+    val any = Array<Any>(3) { "" }
+    copy(ints, any)
+}
+
+interface Source<T> {
     fun nextT(): T
 }
 
 fun showSource(value: Source<String>) {
 //    val src: Source<String?> = value
-    val src: Source<Any> = value
+    val src: Source<out Any> = value
 }
 
 interface Source2<in T> {
