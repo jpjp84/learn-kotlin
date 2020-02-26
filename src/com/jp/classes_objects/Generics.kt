@@ -1,6 +1,7 @@
 package com.jp.classes_objects
 
 fun main() {
+    genericTest()
 
 }
 
@@ -20,9 +21,9 @@ interface Source<T> {
     fun nextT(): T
 }
 
-fun showSource(value: Source<String>) {
+fun showSource(value: Source<Any>) {
 //    val src: Source<String?> = value
-    val src: Source<out Any> = value
+    val src: Source<in String> = value
 }
 
 interface Source2<in T> {
@@ -41,6 +42,18 @@ class Source3<in T> {
 }
 
 fun showSource3(x: Source3<Any>) {
+    x.nextT(3)
     val y: Source3<String> = x
+    y.nextT("test")
 }
 
+fun showSourceByUnknownType(x: MutableList<*>) {
+//    x.add("Test")
+}
+
+fun showSourceByAny(x: MutableList<Any>) {
+    x.add("Test")
+}
+fun <A, B, C> ((A) -> B).c(f: (B) -> C): (A) -> C = {
+    f(this(it))
+}
