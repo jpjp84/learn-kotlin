@@ -5,6 +5,10 @@ fun main() {
     val strs = mutableListOf("aca", "cba")
 //    val strs = emptyList<String>()
     print("solution ${LongestCommonPrefix().longestCommonPrefix(strs.toTypedArray())}")
+
+    //Binary Search
+    val numbers = listOf(1, 3, 4, 5, 8, 14, 15)
+    print("solution ${LongestCommonPrefix().binarySearch(numbers, 15)}")
 }
 
 class LongestCommonPrefix() {
@@ -40,5 +44,20 @@ class LongestCommonPrefix() {
         return extractStr
     }
 
+    fun binarySearch(numbers: List<Int>, target: Int): Int {
+        return find(numbers, 0, numbers.size - 1, target)
+    }
+
+    fun find(numbers: List<Int>, start: Int, end: Int, target: Int): Int {
+        val mid = (start + end) / 2
+        if (numbers.get(mid) == target) {
+            return mid
+        }
+
+        if (numbers.get(mid) < target) {
+            return find(numbers, mid + 1, numbers.size - 1, target)
+        }
+        return find(numbers, 0, mid - 1, target)
+    }
 }
 
