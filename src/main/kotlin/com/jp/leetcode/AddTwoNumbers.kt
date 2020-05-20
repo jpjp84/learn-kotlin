@@ -12,8 +12,8 @@ package com.jp.leetcode
 
 fun main() {
     // int overflow
-    var li1 = AddTwoNumbers().parseListNode(9)
-    var li2 = AddTwoNumbers().parseListNode(9999999991)
+    var li1 = AddTwoNumbers().parseListNode(5)
+    var li2 = AddTwoNumbers().parseListNode(5)
 
     var result = AddTwoNumbers().addTwoNumbers(li1, li2)
     result?.print()
@@ -21,24 +21,44 @@ fun main() {
 
 class AddTwoNumbers() {
     fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
-        val l1Number = parseReverseListNode(l1)
-        val l2Number = parseReverseListNode(l2)
-        println("sum $l1Number, $l2Number => ${l1Number + l2Number}")
+        if (l1 == null || l2 == null) {
+            return null
+        }
 
-        return parseListNode(l1Number + l2Number)
+        var tempL1: ListNode? = l1
+        var tempL2: ListNode? = l2
+        var result: ListNode? = null
+        var plusPrefixNumber = 0
+
+        while (tempL1 != null || tempL2 != null) {
+            val tempSum = (tempL1?.`val` ?: 0) + (tempL2?.`val` ?: 0) + plusPrefixNumber
+            val number = tempSum % 10
+
+            if (result == null) {
+                result = ListNode(number)
+            } else {
+                putListNode(result, ListNode(number))
+            }
+
+            plusPrefixNumber = tempSum / 10
+            tempL1 = tempL1?.next
+            tempL2 = tempL2?.next
+        }
+
+        if (plusPrefixNumber != 0) {
+            result?.let { putListNode(it, ListNode(plusPrefixNumber)) }
+        }
+
+        return result
     }
 
-    private fun parseReverseListNode(listNode: ListNode?): Int {
-        if (listNode == null) {
-            return 0
+    fun putListNode(origin: ListNode, addListNode: ListNode): ListNode? {
+        if (origin.next == null) {
+            origin.next = addListNode
+            return origin
         }
 
-        if (listNode.next == null) {
-            return listNode.`val`
-        }
-
-        val a = parseReverseListNode(listNode.next)
-        return (a * 10) + listNode.`val`
+        return putListNode(origin.next!!, addListNode)
     }
 
     fun parseListNode(i: Int): ListNode? {
@@ -57,6 +77,7 @@ class AddTwoNumbers() {
 
 class ListNode(var `val`: Int) {
     var next: ListNode? = null
+
     fun print() {
         print("$`val`")
         this.next?.let {
