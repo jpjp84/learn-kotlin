@@ -61,16 +61,16 @@ class AddTwoNumbers() {
             next = parseListNode(remainNumber)
         }
     }
-}
+    class ListNode(var `val`: Int) {
+        var next: ListNode? = null
 
-class ListNode(var `val`: Int) {
-    var next: ListNode? = null
-
-    fun print() {
-        print("$`val`")
-        this.next?.let {
-            System.out.print(" -> ")
-            it.print()
+        fun print() {
+            print("$`val`")
+            this.next?.let {
+                System.out.print(" -> ")
+                it.print()
+            }
         }
     }
 }
+
