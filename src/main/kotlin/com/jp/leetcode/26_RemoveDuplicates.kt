@@ -13,19 +13,22 @@ fun main() {
 
 class RemoveDuplicates() {
     fun removeDuplicates(nums: IntArray): Int {
-        var prevNum: Int? = null
+        if (nums.isEmpty()) {
+            return 0
+        }
+
         var currentIndex = 0
 
         nums.map { num ->
-            if (prevNum == num) {
+            if (nums[currentIndex] == num) {
                 return@map
             }
-            nums[currentIndex] = num
-            prevNum = num
+
             currentIndex++
+            nums[currentIndex] = num
         }
 
-        return currentIndex
+        return currentIndex + 1
     }
 }
 
