@@ -16,6 +16,16 @@ fun main() {
 
 class RemoveElement() {
     fun removeElement(nums: IntArray, value: Int): Int {
+        var size = 0
+        for (i in nums.indices) {
+            if (nums[i] != value) {
+                nums[size++] = nums[i]
+            }
+        }
+        return size
+    }
+
+    fun removeElement2(nums: IntArray, value: Int): Int {
         if (!nums.contains(value)) {
             return nums.size
         }
