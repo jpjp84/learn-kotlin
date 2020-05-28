@@ -21,33 +21,35 @@ fun main() {
 class BinaryTreeZigzagLevelOrderTraversal {
 
     fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
-        if (root == null) {
-            return emptyList()
+        root?.let {
+            val queue: Queue<Pair<Int, TreeNode?>> = LinkedList()
+            queue.add(Pair(0, it))
+            return bfs(queue)
         }
+        return emptyList()
+    }
 
-        val queue: Queue<Pair<Int, TreeNode?>> = LinkedList()
-        val result: MutableList<MutableList<Int>> = mutableListOf()
-        queue.add(Pair(0, root))
+    private fun bfs(queue: Queue<Pair<Int, TreeNode?>>): List<List<Int>> {
+        val result: MutableMap<Int, MutableList<Int>> = mutableMapOf()
 
         while (!queue.isEmpty()) {
             val popItem = queue.poll()
             val treeLevel = popItem.first
             val treeNode = popItem.second ?: continue
 
-            if (result.size == treeLevel) {
-                result.add(mutableListOf())
-            }
-
-            if (treeLevel % 2 == 0) {
-                result[treeLevel].add(treeNode.`val`)
-            } else {
-                result[treeLevel].add(0, treeNode.`val`)
+            result.computeIfAbsent(treeLevel) { mutableListOf() }.apply {
+                if (treeLevel % 2 == 0) {
+                    add(treeNode.`val`)
+                    return@apply
+                }
+                add(0, treeNode.`val`)
             }
 
             queue.add(Pair(treeLevel + 1, treeNode.left))
             queue.add(Pair(treeLevel + 1, treeNode.right))
         }
-        return result
+
+        return result.values.toList()
     }
 }
 
