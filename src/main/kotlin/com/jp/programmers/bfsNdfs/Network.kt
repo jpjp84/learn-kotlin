@@ -59,22 +59,24 @@ class Network {
         var answer = 0
         val visit = BooleanArray(computers.size) { false }
 
-        for (x in computers.indices) {
+        computers.mapIndexed { x, _ ->
             if (visit[x]) {
-                continue
+                return@mapIndexed
             }
+
             dfsStack(x, visit, computers)
             answer++
         }
+
         return answer
     }
 
     private fun dfsStack(x: Int, visit: BooleanArray, computers: Array<IntArray>) {
         visit[x] = true
 
-        for (y in computers[x].indices) {
-            if (visit[y] || computers[x][y] == 0) {
-                continue
+        computers[x].mapIndexed { y, value ->
+            if (visit[y] || value == 0) {
+                return@mapIndexed
             }
             dfsStack(y, visit, computers)
         }
