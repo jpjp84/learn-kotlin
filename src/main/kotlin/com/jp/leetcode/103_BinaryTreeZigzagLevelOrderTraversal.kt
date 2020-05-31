@@ -4,7 +4,7 @@ import java.util.*
 
 
 /**
- * https://www.notion.so/Remove-Element-cd10ee8700444901af87aaf33220c45a
+ * https://www.notion.so/Binary-Tree-Zigzag-Level-Order-Traversal-89b4590819ad4719bddc15da14f30947
  */
 
 fun main() {
