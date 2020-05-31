@@ -4,7 +4,7 @@ import java.util.*
 
 
 /**
- * https://www.notion.so/Remove-Element-cd10ee8700444901af87aaf33220c45a
+ * https://www.notion.so/Same-Tree-b97d4148eabe44608f2e18ca4ac9a529
  */
 
 fun main() {
@@ -20,14 +20,14 @@ fun main() {
 class SameTree {
 
     fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
-        val pStack = Stack<TreeNode>()
-        pStack.push(p)
-        val qStack = Stack<TreeNode>()
-        qStack.push(q)
+        val pQueue: Queue<TreeNode> = LinkedList()
+        pQueue.offer(p)
+        val qQueue: Queue<TreeNode> = LinkedList()
+        qQueue.offer(q)
 
-        while (!pStack.isEmpty() || !qStack.isEmpty()) {
-            val pValue = pStack.pop()
-            val qValue = qStack.pop()
+        while (!pQueue.isEmpty() || !qQueue.isEmpty()) {
+            val pValue = pQueue.poll()
+            val qValue = qQueue.poll()
 
             if (pValue == null && qValue == null) {
                 continue
@@ -37,10 +37,10 @@ class SameTree {
                 return false
             }
 
-            pStack.push(pValue.left)
-            pStack.push(pValue.right)
-            qStack.push(qValue.left)
-            qStack.push(qValue.right)
+            pQueue.offer(pValue.left)
+            pQueue.offer(pValue.right)
+            qQueue.offer(qValue.left)
+            qQueue.offer(qValue.right)
         }
         return true
     }
