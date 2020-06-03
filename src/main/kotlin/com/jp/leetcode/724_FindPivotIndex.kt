@@ -17,52 +17,20 @@ fun main() {
 //    val nums = intArrayOf(-1, -1, 0, 1, 1, 0)
     val nums = intArrayOf(-1, 0, 0, 0, 0, -1)
 
-
-
     println("Solution : ${FindPivotIndex().pivotIndex(nums)}")
 }
 
 class FindPivotIndex {
 
-    var answer: Int? = null
-
-    fun pivotIndex(nums: IntArray): Int {
-        val isContainNegative = nums.filter { it < 0 }.count() > 0
-        findPivot(nums, 0, nums.size, isContainNegative)
-
-        return answer ?: -1
-    }
-
-    private fun findPivot(nums: IntArray, firstIndex: Int, lastIndex: Int, isContainNegative: Boolean) {
-        if (firstIndex >= lastIndex) {
-            return
-        }
-
-        var midIndex = (lastIndex + firstIndex) / 2
-        for (i in midIndex..firstIndex) {
-            if (nums[i] != 0) {
-                break
+    fun pivotIndex(nums: IntArray): Int {val sum = nums.sum()
+        var prefixSum = 0
+        for (i in nums.indices) {
+            if (prefixSum == sum - nums[i] - prefixSum) {
+                return i
             }
-            midIndex = i
+            prefixSum += nums[i]
         }
-
-        var beforeSum = 0
-        var afterSum = 0
-
-        nums.mapIndexed { index, num ->
-            when {
-                index == midIndex -> return@mapIndexed
-                index < midIndex -> beforeSum += num
-                index > midIndex -> afterSum += num
-            }
-        }
-
-        if (beforeSum == afterSum) {
-            answer = if (answer == null) midIndex else (answer!!).coerceAtMost(midIndex)
-        }
-
-        findPivot(nums, firstIndex, midIndex, isContainNegative)
-        findPivot(nums, midIndex + 1, lastIndex, isContainNegative)
+        return -1
     }
 }
 
