@@ -10,21 +10,19 @@ import kotlin.math.pow
  */
 
 fun main() {
-    val nums = "{{123}}"
-//    val nums = "{{4,2,3},{3},{2,3,4,1},{2,3}}"
+//    val nums = "{{20,111},{111}}"
+    val nums = "{{4,2,3},{3},{2,3,4,1},{2,3}}"
     println("Solution : ${Prac2_2().solution(nums).toList()}")
 }
 
 class Prac2_2 {
     fun solution(s: String): IntArray {
-        var answer = mutableListOf<Int>()
-        val preSplitedStrs = s.split("},{")
-        val splitedStrs = preSplitedStrs.map {
-            val str = it.replace("""[{}]""".toRegex(), "")
-            str.split(",")
+        val answer = mutableListOf<Int>()
+        val splitStrs = s.split("},{").map {
+            it.replace("""[{}]""".toRegex(), "").split(",")
         }
 
-        splitedStrs.sortedBy { it.size }.map { sortedStr ->
+        splitStrs.sortedBy { it.size }.map { sortedStr ->
             if (sortedStr.size == 1) {
                 answer.add(sortedStr[0].toInt())
                 return@map
