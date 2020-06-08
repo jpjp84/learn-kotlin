@@ -8,50 +8,45 @@ import java.util.*
  */
 
 fun main() {
-    val begin = "hittte"
-    val target = "cogged"
-    val words = arrayOf("hottte", "adottt", "hogtte", "lgttet", "logtte", "cogtte", "coggte", "loggte", "cogged", "cogged", "coggee" )
+    val begin = "hit"
+    val target = "cog"
+    val words = arrayOf("hot", "dot", "dog", "lot", "log", "cog")
     println("Solution : ${ConvertString().solution(begin, target, words)}")
 }
 
 class ConvertString {
-    private var answer: Int = Int.MAX_VALUE
+    private var answer: Int = 0
 
     fun solution(begin: String, target: String, words: Array<String>): Int {
         if (!words.contains(target)) {
             return 0
         }
 
-        val stack = Stack<String>().apply { add(begin) }
+        val stack = Stack<Pair<String, Int>>().apply { add(Pair(begin, 0)) }
         val visit = Array(words.size) { false }
         findTargetByDfs(target, stack, visit, words)
 
-        return if(answer != Int.MAX_VALUE) answer else 0
+        return answer
     }
 
-    private fun findTargetByDfs(target: String, stack: Stack<String>, visit: Array<Boolean>, words: Array<String>) {
+    private fun findTargetByDfs(target: String, stack: Stack<Pair<String, Int>>, visit: Array<Boolean>, words: Array<String>) {
         val frontWord = stack.peek()
 
         words.mapIndexed { index, word ->
-            if (visit[index]) {
+            if (visit[index] || answer > 0) {
                 return@mapIndexed
             }
 
-            val sameCount = frontWord.zip(word).filter { it.first != it.second }.count()
+            val sameCount = frontWord.first.zip(word).filter { it.first != it.second }.count()
             if (sameCount == 1 && target == word) {
-                answer = answer.coerceAtMost(stack.size)
+                answer = frontWord.second
                 return
             }
             if (sameCount == 1) {
                 visit[index] = true
-                findTargetByDfs(target, stack.copy().apply { push(word) }, visit.copyOf(), words)
+                stack.push(Pair(word, frontWord.second + 1))
+                findTargetByDfs(target, stack, visit, words)
             }
         }
-    }
-
-    private fun <E> Stack<E>.copy(): Stack<E> {
-        val tempStack: Stack<E> = Stack()
-        tempStack.addAll(this)
-        return tempStack
     }
 }
