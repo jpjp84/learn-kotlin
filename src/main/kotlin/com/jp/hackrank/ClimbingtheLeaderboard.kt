@@ -25,15 +25,30 @@ fun main(args: Array<String>) {
 
 class ClimbingtheLeaderboard {
     fun climbingLeaderboard(scores: Array<Int>, alice: Array<Int>): Array<Int> {
-        val answer = Array(alice.size) { 1 }
-        alice.mapIndexed { index, aliceScore ->
-            scores.toSet().map scoreLoop@{ score ->
-                if (aliceScore >= score) {
-                    return@scoreLoop
-                }
-                answer[index] += 1
+        val scoreSet = scores.distinct()
+        return alice.map {
+            bSearch(scoreSet, 0, scoreSet.size - 1, it).plus(1)
+        }.toTypedArray()
+    }
+
+    private fun bSearch(scores: List<Int>, first: Int, last: Int, aliceScore: Int): Int {
+        val mid = (first + last) / 2
+
+        if (first >= last) {
+            if (aliceScore < scores[mid]) {
+                return mid + 1
             }
+            return mid
         }
-        return answer
+
+        if (scores[mid] == aliceScore) {
+            return mid
+        }
+
+        if (scores[mid] > aliceScore) {
+            return bSearch(scores, mid + 1, last, aliceScore)
+        }
+
+        return bSearch(scores, first, mid, aliceScore)
     }
 }
