@@ -1,6 +1,4 @@
-package com.jp.algorithm.problem.challenge
-
-import com.sun.javafx.binding.StringFormatter
+package com.jp.algorithm.problem.bitwise
 
 fun main() {
     val relation = arrayOf(
