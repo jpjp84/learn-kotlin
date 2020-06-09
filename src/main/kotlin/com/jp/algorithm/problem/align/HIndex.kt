@@ -1,4 +1,4 @@
-package com.jp.programmers.align
+package com.jp.algorithm.problem.align
 
 fun main() {
 //    val citations = intArrayOf(3, 0, 6, 1, 5)

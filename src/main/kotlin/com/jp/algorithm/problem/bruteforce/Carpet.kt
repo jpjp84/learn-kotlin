@@ -1,7 +1,4 @@
-package com.jp.programmers.bruteforce
-
-import java.util.*
-import kotlin.math.max
+package com.jp.algorithm.problem.bruteforce
 
 fun main() {
 //    val answers = intArrayOf(1, 2, 3, 4, 5)

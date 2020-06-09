@@ -1,4 +1,4 @@
-package com.jp.programmers.align
+package com.jp.algorithm.problem.align
 
 fun main() {
     val array = intArrayOf(1, 5, 2, 6, 3, 7, 4)

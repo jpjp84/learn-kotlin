@@ -1,6 +1,4 @@
-package com.jp.programmers.align
-
-import java.lang.StringBuilder
+package com.jp.algorithm.problem.align
 
 fun main() {
 //    val array = intArrayOf(6, 10, 2)

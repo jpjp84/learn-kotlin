@@ -1,4 +1,4 @@
-package com.jp.leetcode
+package com.jp.algorithm.problem.dynamicprogram
 
 import java.util.*
 

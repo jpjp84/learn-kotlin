@@ -1,7 +1,4 @@
-package com.jp.programmers.greedy
-
-import java.util.*
-import kotlin.math.pow
+package com.jp.algorithm.problem.greedy
 
 
 /**

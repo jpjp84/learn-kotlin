@@ -1,4 +1,4 @@
-package com.jp.programmers.bfsNdfs
+package com.jp.algorithm.problem.bfsNdfs
 
 
 /**

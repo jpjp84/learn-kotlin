@@ -1,7 +1,4 @@
-package com.jp.programmers.bruteforce
-
-import java.util.*
-import kotlin.math.max
+package com.jp.algorithm.problem.bruteforce
 
 
 /**

@@ -1,6 +1,4 @@
-package com.jp.programmers.greedy
-
-import kotlin.math.cos
+package com.jp.algorithm.problem.greedy
 
 
 /**

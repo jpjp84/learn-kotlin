@@ -1,4 +1,4 @@
-package com.jp.programmers.greedy
+package com.jp.algorithm.problem.greedy
 
 import java.util.*
 

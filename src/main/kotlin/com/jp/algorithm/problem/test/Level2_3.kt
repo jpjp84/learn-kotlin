@@ -1,8 +1,6 @@
-package com.jp.programmers.test
+package com.jp.algorithm.problem.test
 
 import java.util.*
-import kotlin.math.max
-import kotlin.math.pow
 
 
 /**

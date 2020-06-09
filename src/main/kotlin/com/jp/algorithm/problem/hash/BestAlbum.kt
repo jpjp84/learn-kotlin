@@ -1,8 +1,4 @@
-package com.jp.programmers.hash
-
-import sun.java2d.xr.MutableInteger
-import java.util.*
-import kotlin.collections.HashMap
+package com.jp.algorithm.problem.hash
 
 
 /**
