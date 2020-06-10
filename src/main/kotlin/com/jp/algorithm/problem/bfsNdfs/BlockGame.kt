@@ -32,19 +32,19 @@ class BlockGame {
                     continue
                 }
 
-                blockCount = blockCount.coerceAtLeast(board[x][y])
-
-                if (availableBlock.contains(board[x][y])) {
-                    continue
+                val availableBlockList = findBlock(board, visit, x, y, availableBlock)
+                if (availableBlockList.isEmpty()) {
+                    blockCount++
+                } else {
+                    availableBlock.addAll(availableBlockList)
                 }
-                availableBlock.addAll(findBlock(board, visit, x, y))
             }
         }
 
-        return blockCount - availableBlock.size
+        return blockCount
     }
 
-    private fun findBlock(board: Array<IntArray>, visit: Array<Array<Boolean>>, x: Int, y: Int): List<Int> {
+    private fun findBlock(board: Array<IntArray>, visit: Array<Array<Boolean>>, x: Int, y: Int, availableBlock: MutableSet<Int>): List<Int> {
         val stack = Stack<Pair<Int, Int>>()
         val blockMap = mutableMapOf<Int, HashSet<Int>>()
         stack.push(Pair(x, y))
@@ -67,17 +67,25 @@ class BlockGame {
             }
         }
 
-        return getAvailableBlocks(board, x, blockMap)
+        return getAvailableBlocks(blockMap, availableBlock)
     }
 
-    private fun getAvailableBlocks(board: Array<IntArray>, x: Int, sizePerHeight: MutableMap<Int, HashSet<Int>>): List<Int> {
+    private fun getAvailableBlocks(sizePerHeight: MutableMap<Int, HashSet<Int>>, availableBlock: MutableSet<Int>): List<Int> {
         val max = sizePerHeight.values.withIndex().maxBy { it.value.size }!!
-        if (max.index == sizePerHeight.size - 1) {
-            return emptyList()
+
+        if (max.index != sizePerHeight.size - 1) {
+            return max.value.toList()
         }
-        return (x + max.index until board.size).flatMap { newX ->
-            max.value.filter { board[newX][it] != 0 }.map { board[newX][it] }
-        }
+
+        sizePerHeight.values
+                .filterIndexed { index, _ -> index < max.index }
+                .flatMap { max.value - it }
+                .map {
+                    if (availableBlock.contains(it)) {
+                        return max.value.toList()
+                    }
+                }
+        return emptyList()
     }
 
     private fun directions(position: Pair<Int, Int>): Array<Pair<Int, Int>> {
