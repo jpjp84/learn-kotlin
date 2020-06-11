@@ -1,22 +1,17 @@
 package com.jp.algorithm.problem.bitwise
 
+import java.util.*
 import kotlin.math.min
+import kotlin.properties.Delegates
 
-fun main() {
-    val price = listOf(2, 5)
-    val special = listOf(
-            listOf(3, 0, 5), // -> 3
-            listOf(1, 2, 10) // -> 1
-    )
-    val needs = listOf(3, 2)
-    // -> sp1 + sp1 + sp1 + (p2*2) -> (3, 0) -> 1110 12
-    // -> sp1 + sp1 + sp2 + (p1*2) -> (2, 1) -> 0111 8
-    // -> sp1 + sp1 + (p1*2 + p2*~) -> (2, 0)-> 0110 6
-    // -> sp1 + sp2 + (p1~~) -> (1, 1) -> 0011 3
-    // -> sp1 + (p1~~) -> (1, 0) -> 0010 2
-    // -> sp2 + (p1~~) -> (0, 1) -> 0001 1
-    // -> (0, 0), (3, 1)
-    // -> 0010 == 0100 == 1000
+// -> sp1 + sp1 + sp1 + (p2*2) -> (3, 0) -> 1110 12
+// -> sp1 + sp1 + sp2 + (p1*2) -> (2, 1) -> 0111 8
+// -> sp1 + sp1 + (p1*2 + p2*~) -> (2, 0)-> 0110 6
+// -> sp1 + sp2 + (p1~~) -> (1, 1) -> 0011 3
+// -> sp1 + (p1~~) -> (1, 0) -> 0010 2
+// -> sp2 + (p1~~) -> (0, 1) -> 0001 1
+// -> (0, 0), (3, 1)
+// -> 0010 == 0100 == 1000
 
 
 //    val price = listOf(2, 3, 4)
@@ -26,14 +21,98 @@ fun main() {
 //    )
 //    val needs = listOf(1, 0, 0)
 //    [2,3,4], [[1,1,0,4],[2,2,1,9]], [1,2,1]
-    // -> (1, 0)
+// -> (1, 0)
 
+
+fun main() {
+
+    val price = listOf(4, 3, 2, 9, 8, 8)
+    val special = listOf(
+            listOf(1, 5, 5, 1, 4, 0, 18), // -> 3
+            listOf(3, 3, 6, 6, 4, 2, 32) // -> 1
+    )
+    val needs = listOf(6, 5, 5, 6, 4, 1)
+//    155140
+//    500501
+//    20+45+8
+//    val price = listOf(2, 5)
+//    val special = listOf(
+//            listOf(3, 0, 5), // -> 3
+//            listOf(1, 2, 10) // -> 1
+//    )
+//    val needs = listOf(3, 2)
+
+//    val price = listOf(1, 1, 1)
+//    val special = listOf(
+//            listOf(1, 1, 1, 0), // -> 3
+//            listOf(2, 2, 1, 1) // -> 1
+//    )
+//    val needs = listOf(1, 1, 0)
+
+//    val price = listOf(2, 3, 4)
+//    val special = listOf(
+//            listOf(1, 1, 0, 4), // -> 1
+//            listOf(2, 2, 1, 9)  // -> X
+//    )
+//    val needs = listOf(1, 0, 0)
 
     println("Solution : ${ShoppingOffers().shoppingOffers(price, special, needs)}")
 }
 
 class ShoppingOffers {
+
+    private var minPrice: Int = 0
+
     fun shoppingOffers(price: List<Int>, special: List<List<Int>>, needs: List<Int>): Int {
+        minPrice = needs.foldIndexed(0) { index, acc, i -> acc + (price[index] * i) }
+
+        special.map { specialElement ->
+            val stack = Stack<List<Int>>()
+            stack.push(specialElement)
+
+            while (stack.isNotEmpty()) {
+                val pop: List<Int> = stack.pop()
+
+                if (isOverNeeds(needs, pop)) {
+                    continue
+                }
+
+                special.map specialLoop@{
+                    val sum = it.zip(pop).mapIndexed { index, pair ->
+                        if (index < needs.size && pair.first + pair.second > needs[index]) {
+
+                            updateMinPrice(pop, needs, price)
+                            return@specialLoop
+                        }
+                        pair.first + pair.second
+                    }
+                    stack.push(sum)
+                }
+            }
+        }
+        return minPrice
+    }
+
+    private fun isOverNeeds(needs: List<Int>, pop: List<Int>): Boolean {
+        needs.zip(pop) { a, b ->
+            if (b > a) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun updateMinPrice(currentBuy: List<Int>, needs: List<Int>, price: List<Int>) {
+        val remainSum = needs.zip(currentBuy).mapIndexed { index, pair -> (pair.first - pair.second) * price[index] }.sum()
+        if (remainSum >= 0) {
+            println("Remain : $remainSum")
+            minPrice = minPrice.coerceAtMost(remainSum + currentBuy.last())
+            return
+        }
+        return
+    }
+
+    fun shoppingOffersByBitwise(price: List<Int>, special: List<List<Int>>, needs: List<Int>): Int {
         var answer = needs.foldIndexed(0) { index, acc, i -> acc + price[index] * i }
 
         val filteredSpecial = special.filter { list ->
