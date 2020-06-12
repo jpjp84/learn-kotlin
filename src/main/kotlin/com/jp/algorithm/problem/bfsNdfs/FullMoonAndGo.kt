@@ -1,5 +1,6 @@
 package com.jp.algorithm.problem.bfsNdfs
 
+import com.jp.classes_objects.SingletonObjects
 import com.jp.classes_objects.SingletonObjects.x
 import java.util.*
 
@@ -23,51 +24,61 @@ fun main(args: Array<String>) {
 class FullMoonAndGo {
     var count = -1
 
-    data class Path(val x: Int, val y: Int, var count: Int)
+    data class Path(val x: Int, val y: Int, var count: Int, var haveKey: Int = 0) {
+        fun print() {
+            println("$x, $y -> $count, Have ${Integer.toBinaryString(haveKey)}")
+        }
+    }
 
     fun solution(maze: Array<Array<Char>>): Int {
+        var root: Path? = null
+        var keyBit = 1
         loop@ for (x in maze.indices) {
             for (y in maze[x].indices) {
                 if (maze[x][y] == '0') {
-                    searchKeyOrExit(maze, Path(x, y, 0), mutableListOf())
-                    break@loop
+                    root = Path(x, y, 0)
+                }
+                if (maze[x][y] in 'a'..'z') {
+                    keyBit = keyBit.shl(1)
                 }
             }
         }
 
+        root?.let { searchKeyOrExit(maze, it.apply { it.haveKey = keyBit - 1 }) }
         return count
     }
 
-    private fun searchKeyOrExit(maze: Array<Array<Char>>, path: Path, findKey: MutableList<Char>) {
+    private fun searchKeyOrExit(maze: Array<Array<Char>>, path: Path) {
         val queue: Queue<Path> = LinkedList()
         queue.offer(path)
-        val visit = Array(maze.size) { Array(maze[0].size) { false } }
+        val visit = Array(maze.size) { Array(maze[0].size) { Array(path.haveKey + 1) { false } } }
 
         while (queue.isNotEmpty() && count == -1) {
             val pollPath = queue.poll()
-            visit[pollPath.x][pollPath.y] = true
+            visit[pollPath.x][pollPath.y][pollPath.haveKey] = true
+            pollPath.print()
 
             run directionLoop@{
                 directions(pollPath).map {
-                    if (it.x < 0 || it.x >= maze.size || it.y < 0 || it.y >= maze[0].size || visit[it.x][it.y]) {
+                    if (it.x < 0 || it.x >= maze.size || it.y < 0 || it.y >= maze[0].size || visit[it.x][it.y][it.haveKey]) {
                         return@map
                     }
 
-                    if (maze[it.x][it.y] == '#' ||
-                            (maze[it.x][it.y] in 'A'..'Z') && !findKey.contains(maze[it.x][it.y]) ||
-                            (maze[it.x][it.y] in 'a'..'z' && findKey.contains(maze[it.x][it.y].toLowerCase()))) {
+                    val value = maze[it.x][it.y]
+                    if (value == '#' ||
+                            (value in 'A'..'Z' && !isFind(value, it.haveKey)) ||
+                            (value in 'a'..'z' && isFind(value, it.haveKey))
+                    ) {
                         return@map
                     }
 
-                    if (maze[it.x][it.y] in 'a'..'z' && !findKey.contains(maze[it.x][it.y].toUpperCase())) {
-                        val newFindKey = findKey.toMutableList().apply { add(maze[it.x][it.y].toUpperCase()) }
-                        searchKeyOrExit(maze, it, newFindKey)
-                        return@map
-                    }
-
-                    if (maze[it.x][it.y] == '1') {
+                    if (value == '1') {
                         count = it.count
                         return@directionLoop
+                    }
+
+                    if (value in 'a'..'z' && !isFind(value, it.haveKey)) {
+                        it.haveKey = it.haveKey.xor(1.shl(value - 'a'))
                     }
 
                     queue.offer(it)
@@ -77,10 +88,15 @@ class FullMoonAndGo {
         return
     }
 
+    private fun isFind(char: Char, findKey: Int): Boolean {
+        val charToInt = 1.shl(char.toLowerCase() - 'a')
+        return charToInt.and(findKey) != charToInt
+    }
+
     private fun directions(position: Path): Array<Path> = arrayOf(
-            Path(position.x, position.y - 1, position.count + 1),
-            Path(position.x - 1, position.y, position.count + 1),
-            Path(position.x, position.y + 1, position.count + 1),
-            Path(position.x + 1, position.y, position.count + 1)
+            Path(position.x, position.y - 1, position.count + 1, position.haveKey),
+            Path(position.x - 1, position.y, position.count + 1, position.haveKey),
+            Path(position.x, position.y + 1, position.count + 1, position.haveKey),
+            Path(position.x + 1, position.y, position.count + 1, position.haveKey)
     )
 }
