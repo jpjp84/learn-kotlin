@@ -1,4 +1,4 @@
-package com.jp.algorithm.problem
+package com.jp.algorithm.problem.implements
 
 /*
  * Complete the 'nonDivisibleSubset' function below.
@@ -10,34 +10,20 @@ package com.jp.algorithm.problem
  */
 
 fun nonDivisibleSubset(k: Int, s: Array<Int>): Int {
-    val newS = s.map { it % k }
-    val n = 1.shl(newS.size) - 1
-    var currentN = n
-    var maxSubSetSize = 0
-
-
-    while (currentN > 0) {
-        val binaryString = "%${s.size}s".format(Integer.toBinaryString(currentN)).replace(" ", "0")
-        if (binaryString.count { it == '1' } >= 2) {
-            val subsetS = newS.filterIndexed { index, _ -> binaryString[index] == '1' }
-            var isMatch = true
-            outer@ for (i in 0..subsetS.size - 2) {
-                for (j in i + 1 until subsetS.size) {
-                    if ((subsetS[i] + subsetS[j]) % k == 0) {
-                        isMatch = false
-                        break@outer
-                    }
-                }
-            }
-
-            if (isMatch) {
-                maxSubSetSize = maxSubSetSize.coerceAtLeast(binaryString.count { it == '1' })
-            }
+    val newS = s.map { it % k }.groupBy { it }
+    var count = s.size
+    var countEqual = 0
+    println(newS)
+    newS.map {
+        if (k - it.key == it.key || it.key == 0) {
+            count -= it.value.size - 1
+        } else if (newS.containsKey(k - it.key) && newS[k - it.key]!!.size > it.value.size) {
+            count -= it.value.size
+        } else if (newS.containsKey(k - it.key) && newS[k - it.key]!!.size == it.value.size) {
+            countEqual += it.value.size
         }
-
-        currentN = (currentN - 1).and(n)
     }
-    return maxSubSetSize
+    return count + (countEqual / 2)
 }
 
 @ExperimentalStdlibApi
@@ -52,7 +38,8 @@ fun main(args: Array<String>) {
 //
 //    val s = readLine()!!.trimEnd().split(" ").map { it.toInt() }.toTypedArray()
 
-    val result = nonDivisibleSubset(5, arrayOf(2, 7, 12, 17, 22))
+//    val result = nonDivisibleSubset(5, arrayOf(2, 7, 12, 17, 22))
+    val result = nonDivisibleSubset(4, arrayOf(1, 3, 5, 6, 7, 8, 10, 12, 15, 26, 74, 55, 235, 467))
     println(result)
 }
 
