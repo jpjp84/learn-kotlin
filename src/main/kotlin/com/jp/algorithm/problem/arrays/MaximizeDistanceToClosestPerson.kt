@@ -1,6 +1,7 @@
 package com.jp.algorithm.problem.arrays
 
 
+
 fun main() {
     val seats = intArrayOf(1, 0, 0, 0, 0, 1, 0, 1)
     println("Solution : ${MaximizeDistanceToClosestPerson().maxDistToClosest(seats)}")
@@ -20,15 +21,14 @@ class MaximizeDistanceToClosestPerson {
 
     fun bestSolution(seats: IntArray): Int {
         var res = 0
-        val n: Int = seats.size
         var last = -1
-        for (i in 0 until n) {
-            if (seats[i] == 1) {
-                res = if (last < 0) i else Math.max(res, (i - last) / 2)
-                last = i
+        seats.indices.map {
+            if (seats[it] == 1) {
+                res = if (last < 0) it else res.coerceAtLeast((it - last) / 2)
+                last = it
             }
         }
-        res = Math.max(res, n - last - 1)
+        res = res.coerceAtLeast(seats.size - last - 1)
         return res
     }
 }
