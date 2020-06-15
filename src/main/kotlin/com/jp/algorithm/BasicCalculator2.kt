@@ -7,12 +7,44 @@ import java.util.*
  */
 
 fun main() {
-    val s = "1+1+1"
+//    val s = "1+1+1"
+//    val s = "3+2*2+3+42+2*3/2-3+4*14/2"
+//    val s = " 3/2 "
+    val s = "0-2147483647"
     println("Solution : ${BasicCalculator2().calculate(s)}")
 }
 
 class BasicCalculator2 {
+
     fun calculate(s: String): Int {
+        val nonSpaceS = s.replace("\\s".toRegex(), "")
+        return """([+\-]?[\d*/]+)""".toRegex().findAll(nonSpaceS).toList().fold(0) { acc, group ->
+            var token = group.groupValues[1]
+            if (token.contains("""[*/]""".toRegex())) {
+                token = operatingMultipleOrDivide(token)
+            }
+
+            when (token.first()) {
+                '+' -> acc + token.substring(1).toInt()
+                '-' -> acc - token.substring(1).toInt()
+                else -> token.toInt()
+            }
+        }
+    }
+
+    private fun operatingMultipleOrDivide(s: String): String {
+        val calculatedValue = """([*/]?[\d]+)""".toRegex().findAll(s).toList().fold(0) { acc, group ->
+            val token = group.groupValues[1]
+            when (token.first()) {
+                '*' -> acc * token.substring(1).toInt()
+                '/' -> acc / token.substring(1).toInt()
+                else -> token.toInt()
+            }
+        }
+        return if (s.first() in "+-") "${s.first()}$calculatedValue" else "$calculatedValue"
+    }
+
+    fun calculate2(s: String): Int {
         val nonSpaceS = s.replace("\\s".toRegex(), "")
         val initNumber = substringOperator(nonSpaceS)
         var remainderString = nonSpaceS.removePrefix(initNumber)
@@ -68,11 +100,5 @@ class BasicCalculator2 {
             res += s[i]
         }
         return res
-    }
-
-    fun reg() {
-        //1. 숫자를 reg로 뽑아낸다
-        //2. 사칙연산을 뽑아낸다
-        //3. 차례로 계산해 나간다.
     }
 }
