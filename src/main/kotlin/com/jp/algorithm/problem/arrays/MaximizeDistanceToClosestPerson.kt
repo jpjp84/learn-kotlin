@@ -1,5 +1,8 @@
 package com.jp.algorithm.problem.arrays
 
+/**
+ * https://www.notion.so/Maximize-Distance-To-Closest-Person-a50aa7a181c04a81a6833edb0a9c6bd4
+ */
 
 
 fun main() {
