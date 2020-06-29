@@ -7,7 +7,7 @@ import java.util.*
  */
 
 fun main() {
-    println("Solution : ${GenerateParentheses().generateParenthesis(1)}")
+    println("Solution : ${GenerateParentheses().generateParenthesis(3)}")
 }
 
 class GenerateParentheses {
@@ -30,7 +30,7 @@ class GenerateParentheses {
                 stack.push("${popStack}(")
             }
 
-            if (countClose < n && countOpen > countClose) {
+            if (countOpen > countClose) {
                 stack.push("${popStack})")
             }
         }
