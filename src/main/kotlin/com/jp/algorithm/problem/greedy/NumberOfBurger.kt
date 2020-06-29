@@ -11,14 +11,10 @@ fun main() {
 }
 
 class NumberOfBurger {
-
     fun numOfBurgers(tomatoSlices: Int, cheeseSlices: Int): List<Int> {
-        for (i in 0..cheeseSlices) {
-            if ((4 * i) + (2 * (cheeseSlices - i)) == tomatoSlices) {
-                return listOf(i, cheeseSlices - i)
-            }
+        if (tomatoSlices % 2 != 0 || cheeseSlices * 2 > tomatoSlices || tomatoSlices > cheeseSlices * 4) {
+            return emptyList()
         }
-
-        return emptyList()
+        return listOf((tomatoSlices / 2 - cheeseSlices), (cheeseSlices * 2) - (tomatoSlices / 2))
     }
 }
