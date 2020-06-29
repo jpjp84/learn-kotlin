@@ -13,6 +13,33 @@ fun main() {
 class GenerateParentheses {
     fun generateParenthesis(n: Int): List<String> {
         val answer = mutableListOf<String>()
+        val stack = Stack<String>()
+        stack.push("(")
+
+        while (!stack.isEmpty()) {
+            val popStack = stack.pop()
+            if (popStack.length == n * 2) {
+                answer.add(popStack)
+                continue
+            }
+
+            val countOpen = popStack.count { it == '(' }
+            val countClose = popStack.count { it == ')' }
+
+            if (countOpen < n) {
+                stack.push("${popStack}(")
+            }
+
+            if (countClose < n && countOpen > countClose) {
+                stack.push("${popStack})")
+            }
+        }
+
+        return answer
+    }
+
+    fun generateParenthesisByBitwise(n: Int): List<String> {
+        val answer = mutableListOf<String>()
         for (i in 0..1.shl(n * 2)) {
             val binaryString = Integer.toBinaryString(i)
 
