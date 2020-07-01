@@ -1,4 +1,4 @@
-package com.jp.algorithm.problem
+package com.jp.algorithm.problem.bitwise
 
 import kotlin.math.sqrt
 
@@ -17,9 +17,10 @@ class PrimeNumberOfSetBits {
 
     fun countPrimeSetBits(L: Int, R: Int): Int {
         val primeList = mutableMapOf<Int, Boolean>()
+
         return (L..R)
                 .map {
-                    val count = Integer.toBinaryString(it).count { bit -> bit == '1' }
+                    val count = setBit(it)
                     if (primeList.contains(count)) {
                         return@map primeList[count]
                     }
@@ -31,17 +32,17 @@ class PrimeNumberOfSetBits {
                 .count { isPrime -> isPrime!! }
     }
 
-    private fun isPrime(n: Int): Boolean {
-        if (n == 0 || n == 1) {
-            return false
+    fun setBit(n: Int): Int {
+        var ones = 0
+        var num = n
+        while (num > 0) {
+            ones++
+            num = num and (num - 1)
         }
+        return ones
+    }
 
-        val sqrt = sqrt(n.toDouble()).toInt()
-        for (i in 2..sqrt) {
-            if (n % i == 0) {
-                return false
-            }
-        }
-        return true
+    private fun isPrime(n: Int): Boolean {
+        return n > 1 && (2..sqrt(n.toDouble()).toInt()).none { n % it == 0 }
     }
 }
