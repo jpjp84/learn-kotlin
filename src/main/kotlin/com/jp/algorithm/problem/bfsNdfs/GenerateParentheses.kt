@@ -1,4 +1,4 @@
-package com.jp.algorithm.problem
+package com.jp.algorithm.problem.bfsNdfs
 
 import java.util.*
 
