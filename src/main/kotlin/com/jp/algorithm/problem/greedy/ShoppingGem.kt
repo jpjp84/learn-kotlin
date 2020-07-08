@@ -1,11 +1,10 @@
-package com.jp.algorithm
+package com.jp.algorithm.problem.greedy
 
 /**
  *
  */
 
 fun main() {
-
     val gems = arrayOf("DIA", "RUBY", "RUBY", "DIA", "DIA", "EMERALD", "SAPPHIRE", "DIA", "RUBY", "DIA", "DIA", "SAPPHIRE")
 //    val gems = arrayOf("AA", "AB", "AC", "AA", "AC")
 //    val gems = arrayOf("ZZZ", "YYY", "NNNN", "YYY", "BBB")
@@ -16,11 +15,14 @@ class ShoppingGem {
     fun solution(gems: Array<String>): IntArray {
         val answer = intArrayOf(1, gems.size)
         val tokenKindSize = gems.toSet().size
-        gems.foldIndexed(mutableMapOf<String, Int>()) { index, gemMap, gem ->
+        gems.foldIndexed(LinkedHashMap<String, Int>()) { index, gemMap, gem ->
+            gemMap.remove(gem)
             gemMap[gem] = index
+
             if (gemMap.size == tokenKindSize) {
-                val start = gemMap.minBy { it.value }!!.value
-                val end = gemMap.maxBy { it.value }!!.value
+                println(gemMap)
+                val start = gemMap.values.first()
+                val end = gemMap.values.last()
                 if (end - start < answer[1] - answer[0]) {
                     answer[0] = start + 1
                     answer[1] = end + 1
