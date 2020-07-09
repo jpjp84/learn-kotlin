@@ -1,4 +1,4 @@
-package com.jp.algorithm.problem
+package com.jp.algorithm.problem.greedy
 
 import kotlin.math.cos
 
@@ -16,8 +16,22 @@ fun main() {
 }
 
 class GasStation {
+    fun canCompleteCircuit(gases: IntArray, cost: IntArray): Int {
+        var start = 0
+        var sum = 0
+        var tank = 0
+        gases.mapIndexed { index, gas ->
+            tank += gas - cost[index]
+            if (tank < 0) {
+                start++
+                sum += tank
+                tank = 0
+            }
+        }
+        return if (sum + tank < 0) -1 else start
+    }
 
-    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+    fun canCompleteCircuit2(gas: IntArray, cost: IntArray): Int {
         gas.mapIndexed { index, gasElement ->
             if (cost[index] > gasElement) {
                 return@mapIndexed
