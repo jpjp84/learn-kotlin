@@ -15,27 +15,27 @@ class ExpressionN {
      */
 
     fun solution(N: Int, number: Int): Int {
-        var numberList = mutableListOf<Int>()
+        val numberMap = HashMap<Int, MutableSet<Int>>()
         var count = 0
 
         while (count++ <= 8) {
-            numberList = numberList
-                    .flatMap { operation(it, N) }
-                    .toMutableList()
+            val key = (1..count).fold(0) { acc, _ -> (acc * 10) + N }
+            var left = key
+            var right = 0
+            numberMap.computeIfAbsent(key) { mutableSetOf() }.addAll(operation(left, right))
 
-            (1..count).fold(0) { acc, _ -> (acc * 10) + N }.let { fullNumber ->
-                numberList.add(fullNumber)
+            while (left != 0) {
+                right = (right * 10) + (left % 10)
+                left /= 10
 
-                var a = fullNumber
-                var b = 0
-                repeat(count - 1) {
-                    a /= 10
-                    b = (b * 10) + (a % 10)
-                    numberList.addAll(operation(a, b))
+                numberMap[left]?.map { leftElement ->
+                    numberMap[right]?.map { rightElement ->
+                        numberMap[key]!!.addAll(operation(leftElement, rightElement))
+                    }
                 }
             }
 
-            if (numberList.contains(number)) return count
+            if (numberMap[key]!!.contains(number)) return count
         }
 
         return -1
@@ -45,8 +45,10 @@ class ExpressionN {
         return mutableListOf(
                 result + N,
                 result - N,
-                result * N,
-                if (result != 0) N / result else null
+                N - result,
+                if (result != 0 && N != 0) result * N else null,
+                if (result != 0 && N != 0) N / result else null,
+                if (result != 0 && N != 0) result / N else null
         ).filterNotNull()
     }
 }
